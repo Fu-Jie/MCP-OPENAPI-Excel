@@ -15,7 +15,6 @@ Example:
 """
 
 
-
 class ExcelServiceError(Exception):
     """
     Base exception for all Excel service errors.

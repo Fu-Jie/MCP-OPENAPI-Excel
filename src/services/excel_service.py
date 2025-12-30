@@ -29,7 +29,12 @@ from typing import Any
 
 from src.adapters.calamine_adapter import CalamineAdapter
 from src.adapters.xlsxwriter_adapter import XlsxWriterAdapter
-from src.exceptions.excel_exceptions import ExcelServiceError
+from src.exceptions.excel_exceptions import (
+    ExcelServiceError,
+    ReadError,
+    SheetNotFoundError,
+    WriteError,
+)
 from src.models.excel_models import (
     ReadExcelRequest,
     ReadExcelResponse,
@@ -160,8 +165,6 @@ class ExcelService:
             for sheet in workbook_info.sheets:
                 if sheet.name == sheet_name:
                     return sheet
-            from src.exceptions.excel_exceptions import SheetNotFoundError
-
             raise SheetNotFoundError(
                 sheet_name=sheet_name,
                 available_sheets=[s.name for s in workbook_info.sheets],
@@ -170,8 +173,6 @@ class ExcelService:
         if sheet_index is not None:
             if 0 <= sheet_index < len(workbook_info.sheets):
                 return workbook_info.sheets[sheet_index]
-            from src.exceptions.excel_exceptions import SheetNotFoundError
-
             raise SheetNotFoundError(
                 sheet_name=f"index {sheet_index}",
                 available_sheets=[s.name for s in workbook_info.sheets],
@@ -179,8 +180,6 @@ class ExcelService:
 
         if workbook_info.sheets:
             return workbook_info.sheets[0]
-
-        from src.exceptions.excel_exceptions import SheetNotFoundError
 
         raise SheetNotFoundError(
             sheet_name="(first sheet)",
@@ -340,8 +339,6 @@ class ExcelService:
         except ExcelServiceError:
             raise
         except Exception as e:
-            from src.exceptions.excel_exceptions import ReadError
-
             raise ReadError(
                 file_path=request.file_path,
                 operation="read",
@@ -391,8 +388,6 @@ class ExcelService:
         except ExcelServiceError:
             raise
         except Exception as e:
-            from src.exceptions.excel_exceptions import WriteError
-
             raise WriteError(
                 file_path=request.file_path,
                 operation="write",

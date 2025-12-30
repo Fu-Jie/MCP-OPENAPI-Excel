@@ -61,6 +61,9 @@ class CalamineAdapter:
     """
 
     SUPPORTED_EXTENSIONS = (".xlsx", ".xls", ".xlsb", ".xlsm", ".ods")
+    # Excel's date system epoch. Excel incorrectly treats 1900 as a leap year
+    # for compatibility with Lotus 1-2-3, so the epoch is December 30, 1899.
+    # All Excel serial dates are counted from this date.
     EXCEL_EPOCH = datetime(1899, 12, 30)
 
     def __init__(self) -> None:
