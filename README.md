@@ -6,6 +6,7 @@ High-performance Excel dual-protocol service with FastAPI (REST) and MCP (Model 
 
 - **High-Performance Reading**: Uses `python-calamine` (Rust-based) for exceptional performance on large files (100MB+)
 - **Streaming Write**: Uses `XlsxWriter` for efficient memory usage during writes
+- **Flexible Fallback**: Includes `openpyxl` adapter for comprehensive Excel support including modifying existing workbooks
 - **Dual Protocol Support**:
   - **OpenAPI (REST)**: Full REST API via FastAPI with automatic OpenAPI documentation
   - **MCP (Model Context Protocol)**: Direct AI agent integration via standard MCP tools
@@ -32,10 +33,18 @@ High-performance Excel dual-protocol service with FastAPI (REST) and MCP (Model 
      ┌───────────────┼───────────────┐
      │               │               │
 ┌────▼────┐    ┌─────▼─────┐    ┌────▼────┐
-│Calamine │    │ XlsxWriter│    │ Pydantic│
-│(Read)   │    │ (Write)   │    │ (Models)│
+│Calamine │    │ XlsxWriter│    │openpyxl │
+│(Read)   │    │ (Write)   │    │(R/W)    │
 └─────────┘    └───────────┘    └─────────┘
 ```
+
+## Adapter Selection Guide
+
+| Adapter | Best For | Limitations |
+|---------|----------|-------------|
+| **CalamineAdapter** | Reading large files (100MB+), high performance | Read-only |
+| **XlsxWriterAdapter** | Creating new files, streaming large writes | Write-only, cannot modify existing files |
+| **OpenpyxlAdapter** | Modifying existing files, when other adapters fail | Slower for very large files |
 
 ## Installation
 
